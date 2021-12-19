@@ -31,25 +31,49 @@ namespace AntiAFK
             this.ahk = Globals.ahk;
             this.ahki = new AhkWrapper(this.ahk);
 
+            foreach (var process in Process.GetProcesses())
+            {
+                if (process.ProcessName.Contains("xiv"))
+                {
+                    logger.Log(process.MainWindowTitle);
+                }
+                
+            }
+
+
             // Main thread
             this.thread = null;
         }
-        static public int GetProcessID(String pname)
+
+        static public int GetProcessID(string pname)
         {
             //Process p = Process.GetCurrentProcess();
             Process[] p = Process.GetProcessesByName(pname);
-            if (p.Length == 1)
+            if (p.Length >= 1)
             {
-                return p[0].Id;
+                foreach (var tmp in p)
+                {
+                    if (tmp.MainWindowTitle.Contains("XIV"))
+                    {
+                        return tmp.Id;
+                    }
+                }
             }
             return -1;
         }
-        static public String GetProcessName(String pname)
+
+        static public string GetProcessName(string pname)
         {
             Process[] p = Process.GetProcessesByName(pname);
-            if (p.Length == 1)
+            if (p.Length >= 1)
             {
-                return p[0].ProcessName;
+                foreach (var tmp in p)
+                {
+                    if (tmp.MainWindowTitle.Contains("XIV"))
+                    {
+                        return tmp.ProcessName;
+                    }
+                }
             }
             return "";
         }
